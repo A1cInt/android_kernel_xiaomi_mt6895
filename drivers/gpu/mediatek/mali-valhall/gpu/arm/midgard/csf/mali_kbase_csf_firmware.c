@@ -449,7 +449,7 @@ static int reload_fw_data_sections(struct kbase_device *kbdev)
 {
 	const u32 magic = FIRMWARE_HEADER_MAGIC;
 	struct kbase_csf_firmware_interface *interface;
-	const struct firmware *firmware;
+	const struct firmware *firmware = NULL;
 	int ret = 0;
 
 	if (request_firmware(&firmware, reload_fw_name, kbdev->dev) != 0) {

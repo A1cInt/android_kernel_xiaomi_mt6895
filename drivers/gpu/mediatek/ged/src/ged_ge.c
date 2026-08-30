@@ -321,32 +321,31 @@ err_parameter:
 
 int ged_dmabuf_set_name(int32_t share_fd, char *name)
 {
-	if (share_fd < 0) {
-		GED_PDEBUG("%s: invalid value of share_fd %d", __func__, share_fd);
-		return -1;
-	}
+    struct dma_buf *dmabuf = NULL;
+    int ret = 0;
 
-	if (name == NULL) {
-		GED_PDEBUG("%s: name is NULL", __func__);
-		return -1;
-	}
+    if (share_fd < 0) {
+        GED_PDEBUG("%s: invalid value of share_fd %d", __func__, share_fd);
+        return -1;
+    }
 
-	struct dma_buf *dmabuf;
+    if (name == NULL) {
+        GED_PDEBUG("%s: name is NULL", __func__);
+        return -1;
+    }
 
-	dmabuf = dma_buf_get(share_fd);
+    dmabuf = dma_buf_get(share_fd);
 
-	if (IS_ERR_OR_NULL(dmabuf)) {
-		GED_PDEBUG("%s: dma_buf_get return NULL", __func__);
-		return -1;
-	}
+    if (IS_ERR_OR_NULL(dmabuf)) {
+        GED_PDEBUG("%s: dma_buf_get return NULL", __func__);
+        return -1;
+    }
 
-	int ret = 0;
+    ret = mtk_dma_buf_set_name(dmabuf, name);
 
-	ret = mtk_dma_buf_set_name(dmabuf, name);
+    dma_buf_put(dmabuf);
 
-	dma_buf_put(dmabuf);
-
-	return ret;
+    return ret;
 }
 
 int ged_bridge_ge_alloc(
